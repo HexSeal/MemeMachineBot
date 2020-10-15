@@ -111,6 +111,6 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		s.ChannelMessageSend(m.ChannelID, caption2)
 
 		// Testing meme creation 
-		meme_machine.createMeme(location, caption1, caption2)
+		meme_machine.CreateMeme(location, caption1, caption2)
 	}
 }
