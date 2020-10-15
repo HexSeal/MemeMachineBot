@@ -13,14 +13,9 @@ import (
 	m "github.com/arrafiv/bannergenerator"
 )
 
-func createMeme() {
-	tempImg1, err := downloadMainImage("http://www.pngmart.com/files/4/Aloe-PNG-Image.png")
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	tempImg2, err := downloadMainImage("https://www.gstatic.com/webp/gallery3/1.png")
+func createMeme(format, caption1, caption2 string) {
+	// Originally a link instead of format
+	tempImg1, err := downloadMainImage(format)
 	if err != nil {
 		log.Println(err)
 		return
@@ -31,11 +26,6 @@ func createMeme() {
 			Image: tempImg1,
 			XPos:  200,
 			YPos:  -100,
-		},
-		m.ImageLayer{
-			Image: tempImg2,
-			XPos:  200,
-			YPos:  100,
 		},
 	}
 
@@ -54,7 +44,7 @@ func createMeme() {
 			Color:    image.Black,
 			DPI:      72,
 			Spacing:  1.5,
-			Text:     "Tumbuhan &",
+			Text:     caption1,
 			XPos:     10,
 			YPos:     0,
 		},
@@ -65,31 +55,9 @@ func createMeme() {
 			Color:    image.Black,
 			DPI:      72,
 			Spacing:  1.5,
-			Text:     "Tanaman",
+			Text:     caption2,
 			XPos:     10,
 			YPos:     50,
-		},
-		m.Label{
-			FontPath: "../../golang/freetype/testdata/",
-			Size:     32,
-			FontType: "luxisr.ttf",
-			Color:    image.Black,
-			DPI:      72,
-			Spacing:  1.5,
-			Text:     "di bawah",
-			XPos:     10,
-			YPos:     290,
-		},
-		m.Label{
-			FontPath: "../../golang/freetype/testdata/",
-			Size:     48,
-			FontType: "luxisr.ttf",
-			Color:    image.Black,
-			DPI:      72,
-			Spacing:  1.5,
-			Text:     "Rp 90rb",
-			XPos:     10,
-			YPos:     320,
 		},
 	}
 
