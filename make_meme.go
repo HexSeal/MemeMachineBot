@@ -3,100 +3,129 @@ package main
 import (
 	"image"
 	"image/color"
-	"image/draw"
-	"io/ioutil"
+	"image/jpeg"
 	"log"
+	"net/http"
+	"os"
 
-	"github.com/golang/freetype"
+	_ "image/png"
+
+	m "github.com/arrafiv/bannergenerator"
 )
 
-// Helped by https://medium.com/@arrafiv/basic-image-processing-with-go-combining-images-and-texts-8510d9214e55
+func main() {
+	tempImg1, err := downloadMainImage("http://www.pngmart.com/files/4/Aloe-PNG-Image.png")
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
-type (
-		//ImageLayer is a struct
-		ImageLayer struct {
-			Image image.Image
-			XPos  int
-			YPos  int
-		}
-	
-		//caption is a struct
-		Caption struct {
-			Text     string
-			FontPath string
-			FontType string
-			Size     float64
-			Color    image.Image
-			DPI      float64
-			Spacing  float64
-			XPos     int
-			YPos     int
-		}
-	
-		//BgProperty is background property struct
-		BgProperty struct {
-			Width   int
-			Length  int
-			BgColor color.Color
-		}
-)
+	tempImg2, err := downloadMainImage("https://www.gstatic.com/webp/gallery3/1.png")
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
-// Combines the meme format and caption
-func MakeMeme(img []ImageLayer, captions []Caption, bgProperty BgProperty) (*image.RGBA, error) {
-	// Create the background layer
-	bgImg := image.NewRGBA(image.Rect(0, 0, bgProperty.Width, bgProperty.Length))
+	imgs := []m.ImageLayer{
+		m.ImageLayer{
+			Image: tempImg1,
+			XPos:  200,
+			YPos:  -100,
+		},
+		m.ImageLayer{
+			Image: tempImg2,
+			XPos:  200,
+			YPos:  100,
+		},
+	}
 
-	// Set the background color
-	draw.Draw(bgImg, bgImg.Bounds(), &image.Uniform{bgProperty.BbColor}, image.ZP, draw.Src)
+	bg := m.BgProperty{
+		Width:   500,
+		Length:  380,
+		BgColor: color.RGBA{227, 221, 221, 1},
+	}
 
-	// Put the image on the layer
-	offset := image.Pt(img.XPos, img.YPos)
+	//add label
+	labels := []m.Label{
+		m.Label{
+			FontPath: "../../golang/freetype/testdata/",
+			Size:     48,
+			FontType: "luxisr.ttf",
+			Color:    image.Black,
+			DPI:      72,
+			Spacing:  1.5,
+			Text:     "Tumbuhan &",
+			XPos:     10,
+			YPos:     0,
+		},
+		m.Label{
+			FontPath: "../../golang/freetype/testdata/",
+			Size:     48,
+			FontType: "luxisr.ttf",
+			Color:    image.Black,
+			DPI:      72,
+			Spacing:  1.5,
+			Text:     "Tanaman",
+			XPos:     10,
+			YPos:     50,
+		},
+		m.Label{
+			FontPath: "../../golang/freetype/testdata/",
+			Size:     32,
+			FontType: "luxisr.ttf",
+			Color:    image.Black,
+			DPI:      72,
+			Spacing:  1.5,
+			Text:     "di bawah",
+			XPos:     10,
+			YPos:     290,
+		},
+		m.Label{
+			FontPath: "../../golang/freetype/testdata/",
+			Size:     48,
+			FontType: "luxisr.ttf",
+			Color:    image.Black,
+			DPI:      72,
+			Spacing:  1.5,
+			Text:     "Rp 90rb",
+			XPos:     10,
+			YPos:     320,
+		},
+	}
 
-	// Combine the image
-	draw.Draw(bgImg, img.Image.Bounds().Add(offset), img.image, image.ZP, draw.Over)
+	res, err := m.GenerateBanner(imgs, labels, bg)
+	if err != nil {
+		log.Printf("Error generating banner: %+v\n", err)
+	}
 
-	// Call another function to handle the captions and combine it
-	bgImg, err := addCaption(bgImg, captions)
+	out, err := os.Create("./meme.jpg")
+	if err != nil {
+		log.Printf("Error creating image file: %+v\n", err)
+		return
+	}
+
+	var opt jpeg.Options
+	opt.Quality = 80
+
+	err = jpeg.Encode(out, res, &opt)
+	if err != nil {
+		log.Printf("Error creating image file: %+v\n", err)
+		return
+	}
+
+	log.Println("Banner Generated")
+}
+
+func downloadMainImage(url string) (image.Image, error) {
+	res, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+	m, _, err := image.Decode(res.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	return bgImg, nil
+	return m, err
 }
-
-func addCaption(img *image.RGBA, captions []Caption) (*image.RGBA, error) {
-	// Initialize the context
-	c := freetype.NewContext()
-	for _, caption := range captions {
-		// Read the font data
-		fontBytes, err := ioutil.ReadFile(caption.FontPath + caption.FontType)
-		if err != nil {
-			return nil, err
-		}
-		f, err := freetype.ParseFont(fontBytes)
-		if err != nil {
-			return nil, err
-		}
-
-		// Caption Settings
-		c.SetDPI(caption.DPI)
-		c.SetFont(f)
-		c.SetFontSize(caption.Size)
-		c.SetClip(img.Bounds())
-		c.SetDst(img)
-		c.SetSrc(caption.Color)
-
-		// Positioning the caption
-		pt := freetype.Pt(caption.XPos, caption.YPos+int(c.PointToFixed(caption.Size)>>6))
-
-		// Put the caption on the image
-		_, err = c.DrawString(caption.Text, pt)
-		if err != nil {
-			log.Println(err)
-			return img, nil
-		}
-		pt.Y += c.PointToFixed(caption.Size * caption.Spacing)
-	}
-	return img, nil
-}
-
