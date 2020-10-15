@@ -1,4 +1,4 @@
-package main
+package meme_machine
 
 import (
 	"image"
@@ -13,7 +13,7 @@ import (
 	m "github.com/arrafiv/bannergenerator"
 )
 
-func main() {
+func createMeme() {
 	tempImg1, err := downloadMainImage("http://www.pngmart.com/files/4/Aloe-PNG-Image.png")
 	if err != nil {
 		log.Println(err)

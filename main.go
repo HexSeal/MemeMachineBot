@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"log"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -67,6 +68,10 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 	// If the message is "ping" reply with "Pong!"
 	if m.Content == "#meme" {
-		s.ChannelMessageSend(m.ChannelID, "Coming right up...")
+		meme, err := os.Open("./meme_formats/facts_meme.jpg")
+		if err != nil {
+			log.Fatalln(err)
+		}
+		s.ChannelFileSend(m.ChannelID, "facts_meme.jpg", meme)
 	}
 }
