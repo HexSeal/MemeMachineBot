@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/HexSeal/MemeMachineBot/meme_machine"
 )
 
 // Testing a basic implementation of a bot from
@@ -105,8 +106,11 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			log.Fatalln(err)
 		}
 
-		s.ChannelFileSend(m.ChannelID, "meme", meme)
+		s.ChannelFileSend(m.ChannelID, "meme.jpg", meme)
 		s.ChannelMessageSend(m.ChannelID, caption1)
 		s.ChannelMessageSend(m.ChannelID, caption2)
+
+		// Testing meme creation 
+		meme_machine.createMeme(location, caption1, caption2)
 	}
 }

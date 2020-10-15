@@ -13,6 +13,7 @@ import (
 	m "github.com/arrafiv/bannergenerator"
 )
 
+
 func createMeme(format, caption1, caption2 string) {
 	// Originally a link instead of format
 	tempImg1, err := downloadMainImage(format)
@@ -40,8 +41,8 @@ func createMeme(format, caption1, caption2 string) {
 		m.Label{
 			FontPath: "../../golang/freetype/testdata/",
 			Size:     48,
-			FontType: "luxisr.ttf",
-			Color:    image.Black,
+			FontType: "BebasNeue-Regular.ttf",
+			Color:    image.White,
 			DPI:      72,
 			Spacing:  1.5,
 			Text:     caption1,
@@ -51,8 +52,8 @@ func createMeme(format, caption1, caption2 string) {
 		m.Label{
 			FontPath: "../../golang/freetype/testdata/",
 			Size:     48,
-			FontType: "luxisr.ttf",
-			Color:    image.Black,
+			FontType: "BebasNeue-Regular.ttf",
+			Color:    image.White,
 			DPI:      72,
 			Spacing:  1.5,
 			Text:     caption2,
