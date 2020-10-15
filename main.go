@@ -84,19 +84,19 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		format := usercommand[0]
 		caption1 := usercommand[1]
 		caption2 := usercommand[2]
-		// println(format, caption1, caption2)
+		println(format, caption1, caption2)
 
 		location := ""
 		// Get the right meme format
 		switch format {
-		case "facts, ":
+		case "facts,":
 			location = "./meme_formats/facts_meme.jpg"
-		case "wonka, ":
+		case "wonka,":
 			location = "./meme_formats/willy_wonka.jpg"
 		default:
 			location = "./meme_formats/facts_meme.jpg"
 		}
-		// println("Location: ", location)
+		println("Location: ", location)
 
 		// This is where we'll eventually use a function from antoher file to combine the image with the captions
 		// Eventually, this will open the new meme itself instead of the format
