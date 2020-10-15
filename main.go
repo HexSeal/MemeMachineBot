@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 	"log"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -66,12 +67,34 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
-	// If the message is "ping" reply with "Pong!"
-	if m.Content == "#meme" {
-		meme, err := os.Open("./meme_formats/facts_meme.jpg")
-		if err != nil {
-			log.Fatalln(err)
-		}
+	
+	usermsg := strings.SplitAfterN(m.Content, " ", 2)
+
+	// If they want a meme, humbly oblige
+	if usermsg[0] == "#meme " {
+	// Check if the bot has been summoned, this splits the #meme from the rest
+	// println(usermsg[0])
+
+	// Breaking down the format and captions after the usercommand
+	userinput := strings.SplitAfterN(m.Content, "#meme ", 2)
+	// println(userinput[0], userinput[1])
+
+	// Breaks down the input to get the individual attributes
+	usercommand := strings.SplitAfterN(userinput[1], ",", 3)
+	format := usercommand[0]
+	caption1 := usercommand[1]
+	caption2 := usercommand[2]
+	println(format, caption1, caption2)
+		
+		// Get the right meme format
+		if format == "facts," {
+		// This is where we'll eventually use a function from antoher file to combine the image with the captions
+		// Eventually, this will open the new meme itself instead of the format
+			meme, err := os.Open("./meme_formats/facts_meme.jpg")
+			if err != nil {
+				log.Fatalln(err)
+			}
 		s.ChannelFileSend(m.ChannelID, "facts_meme.jpg", meme)
+		}
 	}
 }
