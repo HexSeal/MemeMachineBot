@@ -20,7 +20,7 @@ type (
 			YPos  int
 		}
 	
-		//Label is a struct
+		//caption is a struct
 		Caption struct {
 			Text     string
 			FontPath string
@@ -42,7 +42,7 @@ type (
 )
 
 // Combines the meme format and caption
-func MakeMeme(imgs []ImageLayer, captions Caption[], bgProperty BgProperty) (*image.RGBA, error) {
+func MakeMeme(img []ImageLayer, captions []Caption, bgProperty BgProperty) (*image.RGBA, error) {
 	// Create the background layer
 	bgImg := image.NewRGBA(image.Rect(0, 0, bgProperty.Width, bgProperty.Length))
 
@@ -56,10 +56,47 @@ func MakeMeme(imgs []ImageLayer, captions Caption[], bgProperty BgProperty) (*im
 	draw.Draw(bgImg, img.Image.Bounds().Add(offset), img.image, image.ZP, draw.Over)
 
 	// Call another function to handle the captions and combine it
-	bgImg, err := addLabel(bgImg, labels)
+	bgImg, err := addCaption(bgImg, captions)
 	if err != nil {
 		return nil, err
 	}
 
 	return bgImg, nil
+}
+
+func addCaption(img *image.RGBA, captions []Caption) (*image.RGBA, error) {
+	// Initialize the context
+	c := freetype.NewContext()
+	for _, caption := range captions {
+		// Read the font data
+		fontBytes, err := ioutil.ReadFile(caption.FontPath + caption.FontType)
+		if err != nil {
+			return nil, err
+		}
+		f, err := freetype.ParseFont(fontBytes)
+		if err != nil {
+			return nil, err
+		}
+
+		// Caption Settings
+		c.SetDPI(caption.DPI)
+		c.SetFont(f)
+		c.SetFontSize(caption.Size)
+		c.SetClip(img.Bounds())
+		c.SetDst(img)
+		c.SetSrc(caption.Color)
+
+		// Positioning the caption
+		pt := freetype.Pt(caption.XPos, caption.YPos+int(c.PointToFixed(caption.Size)>>6))
+
+		// Put the caption on the image
+		_, err = c.DrawString(caption.Text, pt)
+		if err != nil {
+			log.Println(err)
+			return img, nil
+		}
+		pt.Y += c.PointToFixed(caption.Size * caption.Spacing)
+	}
+	return img, nil
+}
 
