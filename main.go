@@ -1,16 +1,16 @@
 package main
 
 import (
+	"HexSeal/MemeMachineBot/meme"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
-	"syscall"
-	"log"
 	"strings"
+	"syscall"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/HexSeal/MemeMachineBot/meme"
 )
 
 // Testing a basic implementation of a bot from
@@ -68,11 +68,11 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
-	
+
 	usermsg := strings.SplitAfterN(m.Content, " ", 2)
 
 	// If they want a meme, humbly oblige
-	if usermsg[0] == "#meme " {
+	if strings.ToLower(usermsg[0]) == "#meme " {
 		// Check if the bot has been summoned, this splits the #meme from the rest
 		// println(usermsg[0])
 
@@ -82,7 +82,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 		// Breaks down the input to get the individual attributes
 		usercommand := strings.SplitAfterN(userinput[1], ",", 3)
-		format := usercommand[0]
+		format := strings.ToLower(usercommand[0])
 		caption1 := usercommand[1]
 		caption2 := usercommand[2]
 		println(format, caption1, caption2)
@@ -101,16 +101,16 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 		// This is where we'll eventually use a function from antoher file to combine the image with the captions
 		// Eventually, this will open the new meme itself instead of the format
-		meme, err := os.Open(location)
+		userMeme, err := os.Open(location)
 		if err != nil {
 			log.Fatalln(err)
 		}
 
-		s.ChannelFileSend(m.ChannelID, "meme.jpg", meme)
+		s.ChannelFileSend(m.ChannelID, "meme.jpg", userMeme)
 		s.ChannelMessageSend(m.ChannelID, caption1)
 		s.ChannelMessageSend(m.ChannelID, caption2)
 
-		// Testing meme creation 
-		meme_machine.CreateMeme(location, caption1, caption2)
+		// Testing meme creation
+		meme.CreateMeme(location, caption1, caption2)
 	}
 }

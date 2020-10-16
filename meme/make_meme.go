@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"fmt"
 
 	_ "image/png"
 
@@ -16,6 +17,7 @@ import (
 // CreateMeme Takes the format and creates an image, and adds the user-inputted caption
 func CreateMeme(format, caption1, caption2 string) {
 	// Originally a link instead of format
+	fmt.Println("CreateMeme working")
 	tempImg1, err := downloadMainImage(format)
 	if err != nil {
 		log.Println(err)
