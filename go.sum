@@ -1,5 +1,6 @@
 github.com/HexSeal/MemeMachineBot v0.0.0-20201015214502-e0bcf3bc41c9 h1:ab9xZDwpE1ecaFzI0UBxelnPIE96VeAOEiYmrpqqvzY=
 github.com/HexSeal/MemeMachineBot v0.0.0-20201015214502-e0bcf3bc41c9/go.mod h1:qdfDLOiDYT9RRdiCSzCycEfzFgsAjo8prfsVN1dyokE=
+github.com/HexSeal/MemeMachineBot v0.0.0-20201015234447-dfde750ba878 h1:306WUsdwxfd1igjnEcRAH24ihIZePVQs5lbghzVqJg4=
 github.com/arrafiv/bannergenerator v0.0.0-20200512123417-7135e67cfb93 h1:jFzthf0my83UoI1NCUPQQz/4TuD0UJPgpqb1kQo1Kb0=
 github.com/arrafiv/bannergenerator v0.0.0-20200512123417-7135e67cfb93/go.mod h1:6BqpRFzI6tNZUXAh1s/pBUDdsOlIRFw9f/1xfvQ0azY=
 github.com/bwmarrin/discordgo v0.22.0 h1:uBxY1HmlVCsW1IuaPjpCGT6A2DBwRn0nvOguQIxDdFM=

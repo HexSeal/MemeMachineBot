@@ -1,4 +1,4 @@
-package meme_machine
+package meme
 
 import (
 	"image"

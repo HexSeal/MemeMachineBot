@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/HexSeal/MemeMachineBot/meme_machine"
+	"github.com/HexSeal/MemeMachineBot/meme"
 )
 
 // Testing a basic implementation of a bot from
