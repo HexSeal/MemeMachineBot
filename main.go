@@ -28,7 +28,6 @@ func init() {
 }
 
 func main() {
-
 	// Create a new Discord session using the provided bot token.
 	dg, err := discordgo.New("Bot " + Token)
 	if err != nil {
@@ -85,32 +84,36 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		format := strings.ToLower(usercommand[0])
 		caption1 := usercommand[1]
 		caption2 := usercommand[2]
-		println(format, caption1, caption2)
+		// println(format, caption1, caption2)
 
 		location := ""
+		height := 0
+		width := 0
 		// Get the right meme format
 		switch format {
 		case "facts,":
 			location = "./meme_formats/facts_meme.jpg"
+			height = 900
+			width = 680
 		case "wonka,":
 			location = "./meme_formats/willy_wonka.jpg"
 		default:
 			location = "./meme_formats/facts_meme.jpg"
 		}
-		println("Location: ", location)
+		// println("Location: ", location)
 
-		// This is where we'll eventually use a function from antoher file to combine the image with the captions
-		// Eventually, this will open the new meme itself instead of the format
-		userMeme, err := os.Open(location)
+
+		// Create the image
+		meme.CreateMeme(location, caption1, caption2, height, width)
+		
+		// Open it and set it to a variable
+		userMeme, err := os.Open("./meme.png")
 		if err != nil {
 			log.Fatalln(err)
 		}
 
-		s.ChannelFileSend(m.ChannelID, "meme.jpg", userMeme)
-		s.ChannelMessageSend(m.ChannelID, caption1)
-		s.ChannelMessageSend(m.ChannelID, caption2)
-
-		// Testing meme creation
-		meme.CreateMeme(location, caption1, caption2)
+		s.ChannelFileSend(m.ChannelID, "meme.png", userMeme)
+		// s.ChannelMessageSend(m.ChannelID, caption1)
+		// s.ChannelMessageSend(m.ChannelID, caption2)
 	}
 }
