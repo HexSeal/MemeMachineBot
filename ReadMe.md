@@ -11,7 +11,7 @@
 https://discord.com/api/oauth2/authorize?client_id=766006954769776690&permissions=0&scope=bot
 
 To run it: 
-<pre>"go run main.go -t (your bot token here)"</pre>
+<pre>go run main.go -t (your bot token here)</pre>
 </p>
 </br>
 
@@ -25,3 +25,6 @@ To run it:
 <p>And the bot will post the image directly into chat!</p>
 
 ![bot output](./images/example.png)
+
+<p>Working meme formats(more will be added):</p>
+<p>- Wonka</p>
