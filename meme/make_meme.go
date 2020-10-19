@@ -7,7 +7,7 @@ import (
 )
 
 // CreateMeme Takes the format and creates an image, and adds the user-inputted caption
-func CreateMeme(format, caption1, caption2 string, height, width int) {
+func CreateMeme(format, caption1, caption2, textColor string, width, height int) {
 	im, err := gg.LoadImage(format)
 	if err != nil {
 		log.Fatal(err)
@@ -16,9 +16,18 @@ func CreateMeme(format, caption1, caption2 string, height, width int) {
 	dc := gg.NewContext(width, height)
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
-	dc.SetRGB(0, 0, 0)
-	if err := dc.LoadFontFace("./fonts/Impact.ttf", 96); err != nil {
+
+	captionSize := float64(width/len(caption1))
+	println(width/len(caption1))
+
+	// Load the font face
+	if err := dc.LoadFontFace("./fonts/Impact.ttf", captionSize); err != nil {
 		panic(err)
+	}
+	
+	// Set the text color based on the format
+	if textColor == "black" {
+		dc.SetRGB(0, 0, 0)
 	}
 
 	h := float64(height)

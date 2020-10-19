@@ -87,24 +87,30 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		// println(format, caption1, caption2)
 
 		location := ""
-		height := 0
 		width := 0
+		height := 0
+		textColor := "white"
 		// Get the right meme format
 		switch format {
 		case "facts,":
 			location = "./meme_formats/facts_meme.jpg"
-			height = 900
 			width = 680
+			height = 900
+			textColor = "black"
 		case "wonka,":
 			location = "./meme_formats/willy_wonka.jpg"
+			width = 620
+			height = 440
 		default:
-			location = "./meme_formats/facts_meme.jpg"
+			location = "./meme_formats/willy_wonka.jpg"
+			width = 620
+			height = 440
 		}
 		// println("Location: ", location)
 
 
 		// Create the image
-		meme.CreateMeme(location, caption1, caption2, height, width)
+		meme.CreateMeme(location, caption1, caption2, textColor, width, height)
 		
 		// Open it and set it to a variable
 		userMeme, err := os.Open("./meme.png")
